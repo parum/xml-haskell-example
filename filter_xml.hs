@@ -3,13 +3,12 @@ import Text.XML.Light
 import Text.CSV (printCSV)
 
 {-
-Matt Desborough wrote:
-To limit the scope I think I would like just figures related to speaker density and dimensions:
+Filter an xml file and export a CSV with
 ·         Room dimensions
 ·         Number of speakers per wall
 ·         Number of bass management subs
 ·         3 or 5 screen speakers (if possible)
-·         Any other poignant room size settings (I’m afraid I am not familiar with DAD and can’t remember if you can choose things like approximate room space)?
+·         Any other poignant room size settings
 -}
 roomDimensionParams = [
       "screenWallWidth",
