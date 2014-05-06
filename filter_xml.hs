@@ -32,6 +32,7 @@ infoParams = ["company", "theaterName", "auditorium", "city", "state", "country"
 main :: IO ()
 main = do
 --  print . L.take 100 =<< unzipFiles
+  printHeader
   filterXml
 
 
@@ -40,6 +41,8 @@ unzipFiles = do
   file <- L.readFile "dacs/foo.dac"
   return $ fromEntry . head . zEntries . toArchive $ file
 
+printHeader = do
+  putStrLn $ printCSV $ (infoParams ++ roomDimensionParams ++ (map ((++" count") . fst) speakerTypes)) : []
 
 filterXml :: IO ()
 filterXml = do
@@ -51,12 +54,7 @@ filterXml = do
   --print docNames
   let numSpeakersPerType = map length $ map (filterNamesWithPrefixes spkNames) (map snd speakerTypes) 
   let infoParamsData = map (lookupInfoParam doc) infoParams
-  putStrLn $ printCSV $ 
-    -- column names
-    (infoParams     ++ roomDimensionParams ++ (map ((++" count").fst) speakerTypes)) : 
-    -- data
-    (infoParamsData ++ roomData            ++ (map show numSpeakersPerType)) 
-    : []
+  putStrLn $ printCSV $ (infoParamsData ++ roomData ++ (map show numSpeakersPerType)) : []
   hClose infile
   
 
