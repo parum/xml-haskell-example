@@ -47,16 +47,8 @@ printHeader = do
 filterXml :: IO ()
 filterXml = do
   infile <- openFile "dacs/dolbyAtmosConfiguration.xml" ReadMode
-  doc <- loadXmlFromFile infile
-  let roomData = elementValuesFromNames doc roomDimensionParams
---  putStrLn $ printCSV (roomDimensionParams : roomData : [])
-  let spkNames = speakerNames doc
-  --print docNames
-  let numSpeakersPerType = map length $ map (filterNamesWithPrefixes spkNames) (map snd speakerTypes) 
-  let infoParamsData = map (lookupInfoParam doc) infoParams
-  putStrLn $ printCSV $ (infoParamsData ++ roomData ++ (map show numSpeakersPerType)) : []
-  hClose infile
-  
+  xml <- hGetContents infile
+  putStrLn $ filterXmlS xml
 
 loadXmlFromFile :: Handle -> IO Element
 loadXmlFromFile file = do
@@ -64,6 +56,15 @@ loadXmlFromFile file = do
   return $ loadXmlFromString xml
 
  -- Pure:
+filterXmlS :: String -> String
+filterXmlS content = 
+	let doc = loadXmlFromString content
+	    roomData = elementValuesFromNames doc roomDimensionParams
+  	    spkNames = speakerNames doc
+  	    numSpeakersPerType = map length $ map (filterNamesWithPrefixes spkNames) (map snd speakerTypes) 
+  	    infoParamsData = map (lookupInfoParam doc) infoParams
+  	in printCSV $ (infoParamsData ++ roomData ++ (map show numSpeakersPerType)) : []
+
 
 loadXmlFromString :: String -> Element
 loadXmlFromString xmlStr = 
